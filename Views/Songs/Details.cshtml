@@ -12,8 +12,8 @@
                     <a asp-action="Edit" asp-route-id="@Model.Song.Id" class="btn btn-outline-primary btn-sm">
                         <i class="fas fa-edit"></i> Edit
                     </a>
-                    <form method="post" asp-action="Delete" asp-route-id="@Model.Song.Id" 
-                          style="display: inline;" 
+                    <form method="post" asp-action="Delete" asp-route-id="@Model.Song.Id"
+                          style="display: inline;"
                           onsubmit="return confirm('Are you sure you want to delete this song?');">
                         <button type="submit" class="btn btn-outline-danger btn-sm">
                             <i class="fas fa-trash"></i> Delete
@@ -26,7 +26,7 @@
                     <div class="col-sm-3"><strong>Artist:</strong></div>
                     <div class="col-sm-9">@Model.Song.Artist</div>
                 </div>
-                
+
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>YouTube URL:</strong></div>
                     <div class="col-sm-9">
@@ -43,7 +43,7 @@
                         {
                             @foreach (var mood in Model.AssignedMoods)
                             {
-                                <span class="badge rounded-pill me-2 mb-1" 
+                                <span class="badge rounded-pill me-2 mb-1"
                                       style="background-color: @mood.Color; color: white;">
                                     @mood.Name
                                 </span>
@@ -63,7 +63,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-4">
         @if (!string.IsNullOrEmpty(Model.YouTubeVideoId))
         {
@@ -73,10 +73,10 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="ratio ratio-16x9">
-                        <iframe src="https://www.youtube.com/embed/@Model.YouTubeVideoId" 
-                                title="YouTube video player" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        <iframe src="https://www.youtube.com/embed/@Model.YouTubeVideoId"
+                                title="YouTube video player"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowfullscreen>
                         </iframe>
                     </div>
@@ -94,7 +94,7 @@
                     @foreach (var mood in Model.AssignedMoods)
                     {
                         <div class="mb-2">
-                            <span class="badge rounded-pill me-2" 
+                            <span class="badge rounded-pill me-2"
                                   style="background-color: @mood.Color; color: white;">
                                 @mood.Name
                             </span>

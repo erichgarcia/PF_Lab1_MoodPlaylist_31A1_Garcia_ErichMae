@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using MoodPlaylistGenerator.Data;
+using MoodGenerator.repositories.Data;
+using MoodGenerator.Repositories;
 using MoodPlaylistGenerator.Models;
-using BCrypt.Net;
 
 namespace MoodPlaylistGenerator.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MoodGenerator.repositories.Data.ApplicationDbContext _context;
 
-        public AuthService(ApplicationDbContext context)
+        public AuthService(MoodGenerator.repositories.Data.ApplicationDbContext context)
         {
             _context = context;
         }

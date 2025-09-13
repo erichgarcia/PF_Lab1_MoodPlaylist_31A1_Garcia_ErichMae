@@ -1,14 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using MoodPlaylistGenerator.Data;
+using MoodGenerator.repositories.Data;
+using MoodGenerator.Repositories;
 using MoodPlaylistGenerator.Models;
 
 namespace MoodPlaylistGenerator.Services
 {
     public class PlaylistService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MoodGenerator.repositories.Data.ApplicationDbContext _context;
 
-        public PlaylistService(ApplicationDbContext context)
+        public PlaylistService(MoodGenerator.repositories.Data.ApplicationDbContext context)
         {
             _context = context;
         }
@@ -59,7 +60,7 @@ namespace MoodPlaylistGenerator.Services
             }
 
             await _context.SaveChangesAsync();
-            
+
             return await GetPlaylistByIdAsync(playlist.Id, userId) ?? playlist;
         }
 

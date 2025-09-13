@@ -13,7 +13,7 @@
                 <form asp-action="Edit">
                     <input asp-for="Id" type="hidden" />
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -45,8 +45,8 @@
                             {
                                 <div class="col-md-4 col-sm-6 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" 
-                                               name="SelectedMoodIds" value="@mood.Id" 
+                                        <input class="form-check-input" type="checkbox"
+                                               name="SelectedMoodIds" value="@mood.Id"
                                                id="mood_@mood.Id"
                                                @(Model.SelectedMoodIds.Contains(mood.Id) ? "checked" : "") />
                                         <label class="form-check-label" for="mood_@mood.Id">

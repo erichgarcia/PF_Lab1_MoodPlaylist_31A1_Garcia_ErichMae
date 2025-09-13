@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using MoodPlaylistGenerator.Data;
+using MoodGenerator.repositories.Data;
+using MoodGenerator.Repositories;
 using MoodPlaylistGenerator.Models;
-using System.Web;
 
 namespace MoodPlaylistGenerator.Services
 {
     public class SongService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MoodGenerator.repositories.Data.ApplicationDbContext _context;
 
-        public SongService(ApplicationDbContext context)
+        public SongService(MoodGenerator.repositories.Data.ApplicationDbContext context)
         {
             _context = context;
         }
@@ -126,12 +126,12 @@ namespace MoodPlaylistGenerator.Services
         {
             // Extract video ID from various YouTube URL formats
             var uri = new Uri(url);
-            
+
             if (uri.Host.Contains("youtu.be"))
             {
                 return uri.AbsolutePath.TrimStart('/');
             }
-            
+
             if (uri.Host.Contains("youtube.com"))
             {
                 var query = System.Web.HttpUtility.ParseQueryString(uri.Query);

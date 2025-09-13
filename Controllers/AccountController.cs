@@ -1,142 +1,59 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Diagnostics;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
+using MoodPlaylistGenerator.Models;
 using MoodPlaylistGenerator.Services;
 using MoodPlaylistGenerator.ViewModels;
 
-namespace MoodPlaylistGenerator.Controllers
+namespace MoodPlaylistGenerator.Controllers;
+
+public class HomeController : Controller
 {
-    public class AccountController : Controller
+    private readonly ILogger<HomeController> _logger;
+    private readonly SongService? _songService;
+    private readonly PlaylistService? _playlistService;
+
+    public HomeController(ILogger<HomeController> logger, SongService? songService = null, PlaylistService? playlistService = null)
     {
-        private readonly IAuthService _authService;
+        _logger = logger;
+        _songService = songService;
+        _playlistService = playlistService;
+    }
 
-        public AccountController(IAuthService authService)
+    public async Task<IActionResult> Index()
+    {
+        if (User.Identity?.IsAuthenticated == true && _songService != null && _playlistService != null)
         {
-            _authService = authService;
-        }
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+            var allSongs = await _songService.GetUserSongsAsync(userId);
+            var allPlaylists = await _playlistService.GetUserPlaylistsAsync(userId);
+            var moods = await _songService.GetAllMoodsAsync();
+            var songCounts = await _playlistService.GetMoodSongCountsAsync(userId);
 
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var user = await _authService.RegisterAsync(model.Email, model.Username, model.Password);
-            if (user == null)
+            var dashboardModel = new DashboardViewModel
             {
-                ModelState.AddModelError("", "User already exists with this email or username.");
-                return View(model);
-            }
-
-            // Automatically sign in after registration
-            await SignInUser(user.Id, user.Username, user.Email);
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var user = await _authService.LoginAsync(model.EmailOrUsername, model.Password);
-            if (user == null)
-            {
-                ModelState.AddModelError("", "Invalid login credentials.");
-                return View(model);
-            }
-
-            await SignInUser(user.Id, user.Username, user.Email, model.RememberMe);
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpGet]
-        public IActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var success = await _authService.InitiatePasswordResetAsync(model.Email);
-            if (success)
-            {
-                TempData["Message"] = "Password reset instructions sent to your email.";
-                return RedirectToAction("Login");
-            }
-
-            ModelState.AddModelError("", "Email not found.");
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult ResetPassword(string token)
-        {
-            if (string.IsNullOrEmpty(token))
-                return RedirectToAction("Login");
-
-            return View(new ResetPasswordViewModel { Token = token });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var success = await _authService.ResetPasswordAsync(model.Token, model.Password);
-            if (success)
-            {
-                TempData["Message"] = "Password reset successfully. Please login.";
-                return RedirectToAction("Login");
-            }
-
-            ModelState.AddModelError("", "Invalid or expired reset token.");
-            return View(model);
-        }
-
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync();
-            return RedirectToAction("Index", "Home");
-        }
-
-        private async Task SignInUser(int userId, string username, string email, bool rememberMe = false)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Email, email)
+                RecentSongs = allSongs.Take(5).ToList(),
+                RecentPlaylists = allPlaylists.Take(5).ToList(),
+                Moods = moods,
+                MoodSongCounts = songCounts,
+                TotalSongs = allSongs.Count,
+                TotalPlaylists = allPlaylists.Count
             };
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authProperties = new AuthenticationProperties
-            {
-                IsPersistent = rememberMe,
-                ExpiresUtc = rememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddMinutes(60)
-            };
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity), authProperties);
+            return View("Dashboard", dashboardModel);
         }
+
+        return View();
+    }
+
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
