@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using MoodGenerator.repositories.Data;
-using MoodPlaylistGenerator.Services;
-using MoodPlaylistGenerator.Data;
+using MoodPlaylist.SQLite.Repository.Data;
+using MoodPlaylist.SQLite.Services;
 
 namespace MoodPlaylistGenerator.Controllers
 {

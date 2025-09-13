@@ -1,15 +1,14 @@
 using Microsoft.EntityFrameworkCore;
-using MoodGenerator.repositories.Data;
-using MoodGenerator.Repositories;
-using MoodPlaylistGenerator.Models;
+using MoodPlaylist.SQLite.Repository.Data;
+using MoodPlaylist.SQLite.Repository.Models;
 
-namespace MoodPlaylistGenerator.Services
+namespace MoodPlaylist.SQLite.Services
 {
     public class SongService
     {
-        private readonly MoodGenerator.repositories.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public SongService(MoodGenerator.repositories.Data.ApplicationDbContext context)
+        public SongService(ApplicationDbContext context)
         {
             _context = context;
         }

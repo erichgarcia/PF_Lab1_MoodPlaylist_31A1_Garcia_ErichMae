@@ -1,4 +1,4 @@
-using MoodGenerator.Repositories;
+using MoodPlaylist.SQLite.Repository.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace MoodPlaylistGenerator.ViewModels
