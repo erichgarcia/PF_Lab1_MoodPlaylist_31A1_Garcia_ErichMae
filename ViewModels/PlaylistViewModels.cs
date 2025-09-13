@@ -1,5 +1,6 @@
-using System.ComponentModel.DataAnnotations;
+using MoodGenerator.Repositories;
 using MoodPlaylistGenerator.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace MoodPlaylistGenerator.ViewModels
 {

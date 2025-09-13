@@ -1,4 +1,5 @@
-﻿using MoodPlaylistGenerator.Models;
+﻿using MoodGenerator.Repositories;
+using MoodPlaylistGenerator.Models;
 
 namespace MoodPlaylistGenerator.Services
 {
@@ -10,7 +11,7 @@ namespace MoodPlaylistGenerator.Services
         Task<bool> ResetPasswordAsync(string token, string newPassword);
     }
 
-    public class MsAccessAuthService: IAuthService
+    public class MsAccessAuthService : IAuthService
     {
         public Task<User?> RegisterAsync(string email, string username, string password)
         {
